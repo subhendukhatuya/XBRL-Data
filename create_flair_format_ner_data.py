@@ -16,11 +16,11 @@ for i, row in df.iterrows():
     tokens = eval(row['tokens'])
     tags = eval(row['ner_tags'])
 
-    if len(tokens) <= 50:
+    #if len(tokens) <= 50:
 
-        for token_index in range(len(tokens)):
-            f_train.write(tokens[token_index] + ' ' + xbrl_label_dict[tags[token_index]])
-            f_train.write('\n')
+    for token_index in range(len(tokens)):
+        f_train.write(tokens[token_index] + ' ' + xbrl_label_dict[tags[token_index]])
+        f_train.write('\n')
         f_train.write('\n')
 
 # print(set(sorted(tokens_length)))
