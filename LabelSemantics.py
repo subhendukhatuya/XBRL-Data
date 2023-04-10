@@ -31,9 +31,9 @@ tokenizer = AutoTokenizer.from_pretrained("hfl/chinese-roberta-wwm-ext")
 
 # base = '/home/pranav/KGP/BTP/NewDataset/conll-2012/v4/data/train/data/chinese/annotations'
 # base_path = '/root/workspace/berts/chinese-roberta-wwm-ext'
-train_path = '/content/drive/MyDrive/BTP_Dataset/train'
-dev_path = '/content/drive/MyDrive/BTP_Dataset/pre'
-test_path = '/content/drive/MyDrive/BTP_Dataset/test'
+train_path = 'conll-2012/v4/data/train'
+dev_path = 'conll-2012/v4/data/development'
+test_path = 'conll-2012/v4/data/test'
 
 pretrained = ["PER", "ORG", "LOC"]
 
@@ -124,7 +124,7 @@ max_len = 128
 bs = 64
 # tokenizer = BertTokenizer.from_pretrained(base_path)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-tag_file = '/content/drive/MyDrive/BTP_Dataset/pretrain.json'
+tag_file = './pretrain.json'
 
 train_tokens,train_labels = load_data(train_path)
 tag2id,id2tag,short_labels = trans2id(tag_file)
