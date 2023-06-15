@@ -25,6 +25,8 @@ from sklearn import metrics
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.metrics import precision_recall_fscore_support, classification_report, confusion_matrix
 
+from sentence_transformers import SentenceTransformer 
+
 base = './data/finer/'
 base_path = 'bert-base-uncased'
 train_path = 'train.csv'
@@ -34,7 +36,7 @@ tag_file = 'labels.json'
 
 import pandas as pd
 import json
-
+model_label_encoder = SentenceTransformer('all-MiniLM-L6-v2')
 data_directory = "./data/finer/"
 trainDf = pd.read_csv(data_directory + "train.csv")
 testDf = pd.read_csv(data_directory + "test.csv")
@@ -312,17 +314,21 @@ class FewShot_NER(nn.Module):
         #tokenizer = tokenizer.to('cuda')
         for idx, label in enumerate(labels):
             print(idx, label)
+
+            label_output = torch.tensor(model_label_encoder.encode([label]))
+
             #print("While building label representations", idx, torch.cuda.memory_summary())
-            input_ids = tokenizer.encode_plus(label, return_tensors='pt', padding='max_length', max_length=tag_max_len).to(self.device)
-            outputs = encoder(input_ids=input_ids['input_ids'].to(self.device),
-                                         token_type_ids=input_ids['token_type_ids'].to(self.device),
-                                         attention_mask=input_ids['attention_mask'].to(self.device))
+            #input_ids = tokenizer.encode_plus(label, return_tensors='pt', padding='max_length', max_length=tag_max_len).to(self.device)
+            #outputs = encoder(input_ids=input_ids['input_ids'].to(self.device),
+                                        # token_type_ids=input_ids['token_type_ids'].to(self.device),
+                                        # attention_mask=input_ids['attention_mask'].to(self.device))
             
-            torch.cuda.empty_cache()
-            pooler_output = outputs.pooler_output
-            tag_embeddings.append(pooler_output)
-            print(pooler_output.shape)
-            print(len(tag_embeddings))
+            #torch.cuda.empty_cache()
+            #pooler_output = outputs.pooler_output
+            tag_embeddings.append(label_output)
+            print(label_output.shape)
+            #print(len(tag_embeddings))
+
 
             #print(tag_embeddings)
         label_embeddings = torch.stack(tag_embeddings, dim=0)
